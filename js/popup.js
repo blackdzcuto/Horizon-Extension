@@ -1,25 +1,495 @@
-var $jscomp=$jscomp||{};$jscomp.scope={};$jscomp.ASSUME_ES5=!1;$jscomp.ASSUME_NO_NATIVE_MAP=!1;$jscomp.ASSUME_NO_NATIVE_SET=!1;$jscomp.SIMPLE_FROUND_POLYFILL=!1;$jscomp.ISOLATE_POLYFILLS=!1;$jscomp.FORCE_POLYFILL_PROMISE=!1;$jscomp.FORCE_POLYFILL_PROMISE_WHEN_NO_UNHANDLED_REJECTION=!1;$jscomp.defineProperty=$jscomp.ASSUME_ES5||"function"==typeof Object.defineProperties?Object.defineProperty:function(a,b,c){if(a==Array.prototype||a==Object.prototype)return a;a[b]=c.value;return a};
-$jscomp.getGlobal=function(a){a=["object"==typeof globalThis&&globalThis,a,"object"==typeof window&&window,"object"==typeof self&&self,"object"==typeof global&&global];for(var b=0;b<a.length;++b){var c=a[b];if(c&&c.Math==Math)return c}throw Error("Cannot find global object");};$jscomp.global=$jscomp.getGlobal(this);$jscomp.IS_SYMBOL_NATIVE="function"===typeof Symbol&&"symbol"===typeof Symbol("x");$jscomp.TRUST_ES6_POLYFILLS=!$jscomp.ISOLATE_POLYFILLS||$jscomp.IS_SYMBOL_NATIVE;$jscomp.polyfills={};
-$jscomp.propertyToPolyfillSymbol={};$jscomp.POLYFILL_PREFIX="$jscp$";var $jscomp$lookupPolyfilledValue=function(a,b,c){if(!c||null!=a){c=$jscomp.propertyToPolyfillSymbol[b];if(null==c)return a[b];c=a[c];return void 0!==c?c:a[b]}};$jscomp.polyfill=function(a,b,c,d){b&&($jscomp.ISOLATE_POLYFILLS?$jscomp.polyfillIsolated(a,b,c,d):$jscomp.polyfillUnisolated(a,b,c,d))};
-$jscomp.polyfillUnisolated=function(a,b,c,d){c=$jscomp.global;a=a.split(".");for(d=0;d<a.length-1;d++){var e=a[d];if(!(e in c))return;c=c[e]}a=a[a.length-1];d=c[a];b=b(d);b!=d&&null!=b&&$jscomp.defineProperty(c,a,{configurable:!0,writable:!0,value:b})};
-$jscomp.polyfillIsolated=function(a,b,c,d){var e=a.split(".");a=1===e.length;d=e[0];d=!a&&d in $jscomp.polyfills?$jscomp.polyfills:$jscomp.global;for(var f=0;f<e.length-1;f++){var g=e[f];if(!(g in d))return;d=d[g]}e=e[e.length-1];c=$jscomp.IS_SYMBOL_NATIVE&&"es6"===c?d[e]:null;b=b(c);null!=b&&(a?$jscomp.defineProperty($jscomp.polyfills,e,{configurable:!0,writable:!0,value:b}):b!==c&&(void 0===$jscomp.propertyToPolyfillSymbol[e]&&(c=1E9*Math.random()>>>0,$jscomp.propertyToPolyfillSymbol[e]=$jscomp.IS_SYMBOL_NATIVE?
-$jscomp.global.Symbol(e):$jscomp.POLYFILL_PREFIX+c+"$"+e),$jscomp.defineProperty(d,$jscomp.propertyToPolyfillSymbol[e],{configurable:!0,writable:!0,value:b})))};$jscomp.underscoreProtoCanBeSet=function(){var a={a:!0},b={};try{return b.__proto__=a,b.a}catch(c){}return!1};
-$jscomp.setPrototypeOf=$jscomp.TRUST_ES6_POLYFILLS&&"function"==typeof Object.setPrototypeOf?Object.setPrototypeOf:$jscomp.underscoreProtoCanBeSet()?function(a,b){a.__proto__=b;if(a.__proto__!==b)throw new TypeError(a+" is not extensible");return a}:null;$jscomp.arrayIteratorImpl=function(a){var b=0;return function(){return b<a.length?{done:!1,value:a[b++]}:{done:!0}}};$jscomp.arrayIterator=function(a){return{next:$jscomp.arrayIteratorImpl(a)}};
-$jscomp.makeIterator=function(a){var b="undefined"!=typeof Symbol&&Symbol.iterator&&a[Symbol.iterator];if(b)return b.call(a);if("number"==typeof a.length)return $jscomp.arrayIterator(a);throw Error(String(a)+" is not an iterable or ArrayLike");};$jscomp.generator={};$jscomp.generator.ensureIteratorResultIsObject_=function(a){if(!(a instanceof Object))throw new TypeError("Iterator result "+a+" is not an object");};
-$jscomp.generator.Context=function(){this.isRunning_=!1;this.yieldAllIterator_=null;this.yieldResult=void 0;this.nextAddress=1;this.finallyAddress_=this.catchAddress_=0;this.finallyContexts_=this.abruptCompletion_=null};$jscomp.generator.Context.prototype.start_=function(){if(this.isRunning_)throw new TypeError("Generator is already running");this.isRunning_=!0};$jscomp.generator.Context.prototype.stop_=function(){this.isRunning_=!1};
-$jscomp.generator.Context.prototype.jumpToErrorHandler_=function(){this.nextAddress=this.catchAddress_||this.finallyAddress_};$jscomp.generator.Context.prototype.next_=function(a){this.yieldResult=a};$jscomp.generator.Context.prototype.throw_=function(a){this.abruptCompletion_={exception:a,isException:!0};this.jumpToErrorHandler_()};$jscomp.generator.Context.prototype["return"]=function(a){this.abruptCompletion_={"return":a};this.nextAddress=this.finallyAddress_};
-$jscomp.generator.Context.prototype.jumpThroughFinallyBlocks=function(a){this.abruptCompletion_={jumpTo:a};this.nextAddress=this.finallyAddress_};$jscomp.generator.Context.prototype.yield=function(a,b){this.nextAddress=b;return{value:a}};$jscomp.generator.Context.prototype.yieldAll=function(a,b){var c=$jscomp.makeIterator(a),d=c.next();$jscomp.generator.ensureIteratorResultIsObject_(d);if(d.done)this.yieldResult=d.value,this.nextAddress=b;else return this.yieldAllIterator_=c,this.yield(d.value,b)};
-$jscomp.generator.Context.prototype.jumpTo=function(a){this.nextAddress=a};$jscomp.generator.Context.prototype.jumpToEnd=function(){this.nextAddress=0};$jscomp.generator.Context.prototype.setCatchFinallyBlocks=function(a,b){this.catchAddress_=a;void 0!=b&&(this.finallyAddress_=b)};$jscomp.generator.Context.prototype.setFinallyBlock=function(a){this.catchAddress_=0;this.finallyAddress_=a||0};$jscomp.generator.Context.prototype.leaveTryBlock=function(a,b){this.nextAddress=a;this.catchAddress_=b||0};
-$jscomp.generator.Context.prototype.enterCatchBlock=function(a){this.catchAddress_=a||0;a=this.abruptCompletion_.exception;this.abruptCompletion_=null;return a};$jscomp.generator.Context.prototype.enterFinallyBlock=function(a,b,c){c?this.finallyContexts_[c]=this.abruptCompletion_:this.finallyContexts_=[this.abruptCompletion_];this.catchAddress_=a||0;this.finallyAddress_=b||0};
-$jscomp.generator.Context.prototype.leaveFinallyBlock=function(a,b){var c=this.finallyContexts_.splice(b||0)[0];if(c=this.abruptCompletion_=this.abruptCompletion_||c){if(c.isException)return this.jumpToErrorHandler_();void 0!=c.jumpTo&&this.finallyAddress_<c.jumpTo?(this.nextAddress=c.jumpTo,this.abruptCompletion_=null):this.nextAddress=this.finallyAddress_}else this.nextAddress=a};$jscomp.generator.Context.prototype.forIn=function(a){return new $jscomp.generator.Context.PropertyIterator(a)};
-$jscomp.generator.Context.PropertyIterator=function(a){this.object_=a;this.properties_=[];for(var b in a)this.properties_.push(b);this.properties_.reverse()};$jscomp.generator.Context.PropertyIterator.prototype.getNext=function(){for(;0<this.properties_.length;){var a=this.properties_.pop();if(a in this.object_)return a}return null};$jscomp.generator.Engine_=function(a){this.context_=new $jscomp.generator.Context;this.program_=a};
-$jscomp.generator.Engine_.prototype.next_=function(a){this.context_.start_();if(this.context_.yieldAllIterator_)return this.yieldAllStep_(this.context_.yieldAllIterator_.next,a,this.context_.next_);this.context_.next_(a);return this.nextStep_()};
-$jscomp.generator.Engine_.prototype.return_=function(a){this.context_.start_();var b=this.context_.yieldAllIterator_;if(b)return this.yieldAllStep_("return"in b?b["return"]:function(c){return{value:c,done:!0}},a,this.context_["return"]);this.context_["return"](a);return this.nextStep_()};
-$jscomp.generator.Engine_.prototype.throw_=function(a){this.context_.start_();if(this.context_.yieldAllIterator_)return this.yieldAllStep_(this.context_.yieldAllIterator_["throw"],a,this.context_.next_);this.context_.throw_(a);return this.nextStep_()};
-$jscomp.generator.Engine_.prototype.yieldAllStep_=function(a,b,c){try{var d=a.call(this.context_.yieldAllIterator_,b);$jscomp.generator.ensureIteratorResultIsObject_(d);if(!d.done)return this.context_.stop_(),d;var e=d.value}catch(f){return this.context_.yieldAllIterator_=null,this.context_.throw_(f),this.nextStep_()}this.context_.yieldAllIterator_=null;c.call(this.context_,e);return this.nextStep_()};
-$jscomp.generator.Engine_.prototype.nextStep_=function(){for(;this.context_.nextAddress;)try{var a=this.program_(this.context_);if(a)return this.context_.stop_(),{value:a.value,done:!1}}catch(b){this.context_.yieldResult=void 0,this.context_.throw_(b)}this.context_.stop_();if(this.context_.abruptCompletion_){a=this.context_.abruptCompletion_;this.context_.abruptCompletion_=null;if(a.isException)throw a.exception;return{value:a["return"],done:!0}}return{value:void 0,done:!0}};
-$jscomp.generator.Generator_=function(a){this.next=function(b){return a.next_(b)};this["throw"]=function(b){return a.throw_(b)};this["return"]=function(b){return a.return_(b)};this[Symbol.iterator]=function(){return this}};$jscomp.generator.createGenerator=function(a,b){var c=new $jscomp.generator.Generator_(new $jscomp.generator.Engine_(b));$jscomp.setPrototypeOf&&a.prototype&&$jscomp.setPrototypeOf(c,a.prototype);return c};
-$jscomp.asyncExecutePromiseGenerator=function(a){function b(d){return a.next(d)}function c(d){return a["throw"](d)}return new Promise(function(d,e){function f(g){g.done?d(g.value):Promise.resolve(g.value).then(b,c).then(f,e)}f(a.next())})};$jscomp.asyncExecutePromiseGeneratorFunction=function(a){return $jscomp.asyncExecutePromiseGenerator(a())};$jscomp.asyncExecutePromiseGeneratorProgram=function(a){return $jscomp.asyncExecutePromiseGenerator(new $jscomp.generator.Generator_(new $jscomp.generator.Engine_(a)))};
-window.onload=function(){function a(c){var d=document.getElementById("snackbar");d.addEventListener("click",function(){d.className=d.className.replace("show","")});d.innerHTML=c;d.className="show";setTimeout(function(){d.className=d.className.replace("show","")},3E3)}var b=null;document.getElementById("submit").onclick=function(){var c=document.getElementById("username").value,d=document.getElementById("password").value,e=document.getElementById("address").value;if(c&&d&&e){try{b=new WebSocket(e)}catch(f){a("Invalid websocket address!")}b.onerror=
-function(f){a("Connection error to the websocket server.")};b.onmessage=function(f){var g,k;return $jscomp.asyncExecutePromiseGeneratorProgram(function(h){if(1==h.nextAddress){f=JSON.parse(f.data);if("Username&PassWord"==f.Status)return a("Sending information to the server!"),h["return"](b.send(JSON.stringify({type:"login",username:c,password:d})));if("Success"!=f.Status)return h.jumpTo(2);g=f.Session_ID;k=f.TimeStamp;a("Login successful, redirecting in 3 seconds!");return h.yield(new Promise(function(l){return setTimeout(l,
-3E3)}),3)}2!=h.nextAddress&&(localStorage.setItem("Session_ID",JSON.stringify({Session_ID:g,TimeStamp:k,Websocket:e})),window.open("../check.html"));0==f.Status&&a("Incorrect password or account with code: "+f.Code);h.jumpToEnd()})}}else a("You need to enter the complete login information.")}};
+var h = h || {};
+h.scope = {};
+h.ASSUME_ES5 = false;
+h.ASSUME_NO_NATIVE_MAP = false;
+h.ASSUME_NO_NATIVE_SET = false;
+h.SIMPLE_FROUND_POLYFILL = false;
+h.ISOLATE_POLYFILLS = false;
+h.FORCE_POLYFILL_PROMISE = false;
+h.FORCE_POLYFILL_PROMISE_WHEN_NO_UNHANDLED_REJECTION = false;
+h.defineProperty = h.ASSUME_ES5 || typeof Object.defineProperties == "function" ? Object.defineProperty : function (d, a, b) {
+  if (d == Array.prototype || d == Object.prototype) {
+    return d;
+  }
+  d[a] = b.value;
+  return d;
+};
+h.getGlobal = function (d) {
+  d = [typeof globalThis == "object" && globalThis, d, typeof window == "object" && window, typeof self == "object" && self, typeof global == "object" && global];
+  for (var e = 0; e < d.length; ++e) {
+    var f = d[e];
+    if (f && f.Math == Math) {
+      return f;
+    }
+  }
+  throw Error("Cannot find global object");
+};
+h.global = h.getGlobal(this);
+h.IS_SYMBOL_NATIVE = typeof Symbol === "function" && typeof Symbol("x") === "symbol";
+h.TRUST_ES6_POLYFILLS = !h.ISOLATE_POLYFILLS || h.IS_SYMBOL_NATIVE;
+h.polyfills = {};
+h.propertyToPolyfillSymbol = {};
+h.POLYFILL_PREFIX = "$jscp$";
+var i = function (d, a, b) {
+  if (!b || d != null) {
+    b = h.propertyToPolyfillSymbol[a];
+    if (b == null) {
+      return d[a];
+    }
+    b = d[b];
+    if (b !== undefined) {
+      return b;
+    } else {
+      return d[a];
+    }
+  }
+};
+h.polyfill = function (e, a, b, c) {
+  if (a) {
+    if (h.ISOLATE_POLYFILLS) {
+      h.polyfillIsolated(e, a, b, c);
+    } else {
+      h.polyfillUnisolated(e, a, b, c);
+    }
+  }
+};
+h.polyfillUnisolated = function (f, g, i, j) {
+  i = h.global;
+  f = f.split(".");
+  for (j = 0; j < f.length - 1; j++) {
+    var k = f[j];
+    if (!(k in i)) {
+      return;
+    }
+    i = i[k];
+  }
+  f = f[f.length - 1];
+  j = i[f];
+  g = g(j);
+  if (g != j && g != null) {
+    h.defineProperty(i, f, {
+      configurable: true,
+      writable: true,
+      value: g
+    });
+  }
+};
+h.polyfillIsolated = function (i, j, k, l) {
+  var m = i.split(".");
+  i = m.length === 1;
+  l = m[0];
+  l = !i && l in h.polyfills ? h.polyfills : h.global;
+  for (var n = 0; n < m.length - 1; n++) {
+    var o = m[n];
+    if (!(o in l)) {
+      return;
+    }
+    l = l[o];
+  }
+  m = m[m.length - 1];
+  k = h.IS_SYMBOL_NATIVE && k === "es6" ? l[m] : null;
+  j = j(k);
+  if (j != null) {
+    if (i) {
+      h.defineProperty(h.polyfills, m, {
+        configurable: true,
+        writable: true,
+        value: j
+      });
+    } else if (j !== k) {
+      if (h.propertyToPolyfillSymbol[m] === undefined) {
+        k = Math.random() * 1000000000 >>> 0;
+        h.propertyToPolyfillSymbol[m] = h.IS_SYMBOL_NATIVE ? h.global.Symbol(m) : h.POLYFILL_PREFIX + k + "$" + m;
+      }
+      h.defineProperty(l, h.propertyToPolyfillSymbol[m], {
+        configurable: true,
+        writable: true,
+        value: j
+      });
+    }
+  }
+};
+h.underscoreProtoCanBeSet = function () {
+  var c = {
+    a: true
+  };
+  var a = {};
+  try {
+    a.__proto__ = c;
+    return a.a;
+  } catch (a) {}
+  return false;
+};
+h.setPrototypeOf = h.TRUST_ES6_POLYFILLS && typeof Object.setPrototypeOf == "function" ? Object.setPrototypeOf : h.underscoreProtoCanBeSet() ? function (c, a) {
+  c.__proto__ = a;
+  if (c.__proto__ !== a) {
+    throw new TypeError(c + " is not extensible");
+  }
+  return c;
+} : null;
+h.arrayIteratorImpl = function (c) {
+  var a = 0;
+  return function () {
+    if (a < c.length) {
+      return {
+        done: false,
+        value: c[a++]
+      };
+    } else {
+      return {
+        done: true
+      };
+    }
+  };
+};
+h.arrayIterator = function (b) {
+  return {
+    next: h.arrayIteratorImpl(b)
+  };
+};
+h.makeIterator = function (c) {
+  var a = typeof Symbol != "undefined" && Symbol.iterator && c[Symbol.iterator];
+  if (a) {
+    return a.call(c);
+  }
+  if (typeof c.length == "number") {
+    return h.arrayIterator(c);
+  }
+  throw Error(String(c) + " is not an iterable or ArrayLike");
+};
+h.generator = {};
+h.generator.ensureIteratorResultIsObject_ = function (b) {
+  if (!(b instanceof Object)) {
+    throw new TypeError("Iterator result " + b + " is not an object");
+  }
+};
+h.generator.Context = function () {
+  this.isRunning_ = false;
+  this.yieldAllIterator_ = null;
+  this.yieldResult = undefined;
+  this.nextAddress = 1;
+  this.finallyAddress_ = this.catchAddress_ = 0;
+  this.finallyContexts_ = this.abruptCompletion_ = null;
+};
+h.generator.Context.prototype.start_ = function () {
+  if (this.isRunning_) {
+    throw new TypeError("Generator is already running");
+  }
+  this.isRunning_ = true;
+};
+h.generator.Context.prototype.stop_ = function () {
+  this.isRunning_ = false;
+};
+h.generator.Context.prototype.jumpToErrorHandler_ = function () {
+  this.nextAddress = this.catchAddress_ || this.finallyAddress_;
+};
+h.generator.Context.prototype.next_ = function (b) {
+  this.yieldResult = b;
+};
+h.generator.Context.prototype.throw_ = function (b) {
+  this.abruptCompletion_ = {
+    exception: b,
+    isException: true
+  };
+  this.jumpToErrorHandler_();
+};
+h.generator.Context.prototype.return = function (b) {
+  this.abruptCompletion_ = {
+    return: b
+  };
+  this.nextAddress = this.finallyAddress_;
+};
+h.generator.Context.prototype.jumpThroughFinallyBlocks = function (b) {
+  this.abruptCompletion_ = {
+    jumpTo: b
+  };
+  this.nextAddress = this.finallyAddress_;
+};
+h.generator.Context.prototype.yield = function (c, a) {
+  this.nextAddress = a;
+  return {
+    value: c
+  };
+};
+h.generator.Context.prototype.yieldAll = function (e, a) {
+  var b = h.makeIterator(e);
+  var c = b.next();
+  h.generator.ensureIteratorResultIsObject_(c);
+  if (c.done) {
+    this.yieldResult = c.value;
+    this.nextAddress = a;
+  } else {
+    this.yieldAllIterator_ = b;
+    return this.yield(c.value, a);
+  }
+};
+h.generator.Context.prototype.jumpTo = function (b) {
+  this.nextAddress = b;
+};
+h.generator.Context.prototype.jumpToEnd = function () {
+  this.nextAddress = 0;
+};
+h.generator.Context.prototype.setCatchFinallyBlocks = function (c, a) {
+  this.catchAddress_ = c;
+  if (a != undefined) {
+    this.finallyAddress_ = a;
+  }
+};
+h.generator.Context.prototype.setFinallyBlock = function (b) {
+  this.catchAddress_ = 0;
+  this.finallyAddress_ = b || 0;
+};
+h.generator.Context.prototype.leaveTryBlock = function (c, a) {
+  this.nextAddress = c;
+  this.catchAddress_ = a || 0;
+};
+h.generator.Context.prototype.enterCatchBlock = function (b) {
+  this.catchAddress_ = b || 0;
+  b = this.abruptCompletion_.exception;
+  this.abruptCompletion_ = null;
+  return b;
+};
+h.generator.Context.prototype.enterFinallyBlock = function (d, a, b) {
+  if (b) {
+    this.finallyContexts_[b] = this.abruptCompletion_;
+  } else {
+    this.finallyContexts_ = [this.abruptCompletion_];
+  }
+  this.catchAddress_ = d || 0;
+  this.finallyAddress_ = a || 0;
+};
+h.generator.Context.prototype.leaveFinallyBlock = function (d, a) {
+  var b = this.finallyContexts_.splice(a || 0)[0];
+  if (b = this.abruptCompletion_ = this.abruptCompletion_ || b) {
+    if (b.isException) {
+      return this.jumpToErrorHandler_();
+    }
+    if (b.jumpTo != undefined && this.finallyAddress_ < b.jumpTo) {
+      this.nextAddress = b.jumpTo;
+      this.abruptCompletion_ = null;
+    } else {
+      this.nextAddress = this.finallyAddress_;
+    }
+  } else {
+    this.nextAddress = d;
+  }
+};
+h.generator.Context.prototype.forIn = function (b) {
+  return new h.generator.Context.PropertyIterator(b);
+};
+h.generator.Context.PropertyIterator = function (c) {
+  this.object_ = c;
+  this.properties_ = [];
+  for (var a in c) {
+    this.properties_.push(a);
+  }
+  this.properties_.reverse();
+};
+h.generator.Context.PropertyIterator.prototype.getNext = function () {
+  for (; this.properties_.length > 0;) {
+    var b = this.properties_.pop();
+    if (b in this.object_) {
+      return b;
+    }
+  }
+  return null;
+};
+h.generator.Engine_ = function (b) {
+  this.context_ = new h.generator.Context();
+  this.program_ = b;
+};
+h.generator.Engine_.prototype.next_ = function (b) {
+  this.context_.start_();
+  if (this.context_.yieldAllIterator_) {
+    return this.yieldAllStep_(this.context_.yieldAllIterator_.next, b, this.context_.next_);
+  }
+  this.context_.next_(b);
+  return this.nextStep_();
+};
+h.generator.Engine_.prototype.return_ = function (c) {
+  this.context_.start_();
+  var a = this.context_.yieldAllIterator_;
+  if (a) {
+    return this.yieldAllStep_("return" in a ? a.return : function (a) {
+      return {
+        value: a,
+        done: true
+      };
+    }, c, this.context_.return);
+  }
+  this.context_.return(c);
+  return this.nextStep_();
+};
+h.generator.Engine_.prototype.throw_ = function (b) {
+  this.context_.start_();
+  if (this.context_.yieldAllIterator_) {
+    return this.yieldAllStep_(this.context_.yieldAllIterator_.throw, b, this.context_.next_);
+  }
+  this.context_.throw_(b);
+  return this.nextStep_();
+};
+h.generator.Engine_.prototype.yieldAllStep_ = function (f, a, b) {
+  try {
+    var c = f.call(this.context_.yieldAllIterator_, a);
+    h.generator.ensureIteratorResultIsObject_(c);
+    if (!c.done) {
+      this.context_.stop_();
+      return c;
+    }
+    var d = c.value;
+  } catch (a) {
+    this.context_.yieldAllIterator_ = null;
+    this.context_.throw_(a);
+    return this.nextStep_();
+  }
+  this.context_.yieldAllIterator_ = null;
+  b.call(this.context_, d);
+  return this.nextStep_();
+};
+h.generator.Engine_.prototype.nextStep_ = function () {
+  for (; this.context_.nextAddress;) {
+    try {
+      var b = this.program_(this.context_);
+      if (b) {
+        this.context_.stop_();
+        return {
+          value: b.value,
+          done: false
+        };
+      }
+    } catch (a) {
+      this.context_.yieldResult = undefined;
+      this.context_.throw_(a);
+    }
+  }
+  this.context_.stop_();
+  if (this.context_.abruptCompletion_) {
+    b = this.context_.abruptCompletion_;
+    this.context_.abruptCompletion_ = null;
+    if (b.isException) {
+      throw b.exception;
+    }
+    return {
+      value: b.return,
+      done: true
+    };
+  }
+  return {
+    value: undefined,
+    done: true
+  };
+};
+h.generator.Generator_ = function (c) {
+  this.next = function (a) {
+    return c.next_(a);
+  };
+  this.throw = function (a) {
+    return c.throw_(a);
+  };
+  this.return = function (a) {
+    return c.return_(a);
+  };
+  this[Symbol.iterator] = function () {
+    return this;
+  };
+};
+h.generator.createGenerator = function (d, a) {
+  var b = new h.generator.Generator_(new h.generator.Engine_(a));
+  if (h.setPrototypeOf && d.prototype) {
+    h.setPrototypeOf(b, d.prototype);
+  }
+  return b;
+};
+h.asyncExecutePromiseGenerator = function (g) {
+  function a(a) {
+    return g.next(a);
+  }
+  function b(a) {
+    return g.throw(a);
+  }
+  return new Promise(function (c, d) {
+    function e(f) {
+      if (f.done) {
+        c(f.value);
+      } else {
+        Promise.resolve(f.value).then(a, b).then(e, d);
+      }
+    }
+    e(g.next());
+  });
+};
+h.asyncExecutePromiseGeneratorFunction = function (b) {
+  return h.asyncExecutePromiseGenerator(b());
+};
+h.asyncExecutePromiseGeneratorProgram = function (b) {
+  return h.asyncExecutePromiseGenerator(new h.generator.Generator_(new h.generator.Engine_(b)));
+};
+window.onload = function () {
+  function e(a) {
+    var b = document.getElementById("snackbar");
+    b.addEventListener("click", function () {
+      b.className = b.className.replace("show", "");
+    });
+    b.innerHTML = a;
+    b.className = "show";
+    setTimeout(function () {
+      b.className = b.className.replace("show", "");
+    }, 3000);
+  }
+  var a = null;
+  document.getElementById("submit").onclick = function () {
+    var b = document.getElementById("username").value;
+    var c = document.getElementById("password").value;
+    var d = document.getElementById("address").value;
+    if (b && c && d) {
+      try {
+        a = new WebSocket(d);
+      } catch (a) {
+        e("Invalid websocket address!");
+      }
+      a.onerror = function (a) {
+        e("Connection error to the websocket server.");
+      };
+      a.onmessage = function (i) {
+        var j;
+        var l;
+        return h.asyncExecutePromiseGeneratorProgram(function (f) {
+          if (f.nextAddress == 1) {
+            i = JSON.parse(i.data);
+            if (i.Status == "Username&PassWord") {
+              e("Sending information to the server!");
+              return f.return(a.send(JSON.stringify({
+                type: "login",
+                username: b,
+                password: c
+              })));
+            }
+            if (i.Status != "Success") {
+              return f.jumpTo(2);
+            }
+            j = i.Session_ID;
+            l = i.TimeStamp;
+            e("Login successful, redirecting in 3 seconds!");
+            return f.yield(new Promise(function (a) {
+              return setTimeout(a, 3000);
+            }), 3);
+          }
+          if (f.nextAddress != 2) {
+            localStorage.setItem("Session_ID", JSON.stringify({
+              Session_ID: j,
+              TimeStamp: l,
+              Websocket: d
+            }));
+            window.open("../check.html");
+          }
+          if (i.Status == 0) {
+            e("Incorrect password or account with code: " + i.Code);
+          }
+          f.jumpToEnd();
+        });
+      };
+    } else {
+      e("You need to enter the complete login information.");
+    }
+  };
+};
