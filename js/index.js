@@ -1,2 +1,27 @@
-window.onload=function(){document.getElementById("ExpApp").addEventListener("click",function(){chrome.cookies.getAll({domain:"facebook.com"},function(a){a=a.map(function(b){return{key:b.name,value:b.value,domain:"facebook.com",path:b.path,hostOnly:b.hostOnly,creation:(new Date).toISOString(),lastAccessed:(new Date).toISOString()}});a=JSON.stringify(a,null,4);var c=document.createElement("input");document.body.appendChild(c);c.value=a;c.select();document.execCommand("copy");document.body.removeChild(c);
-alert("Copy AppState Success!")})})};
+window.onload = function () {
+  document.getElementById("ExpApp").addEventListener("click", function () {
+    chrome.cookies.getAll({
+      domain: "facebook.com"
+    }, function (b) {
+      b = b.map(function (a) {
+        return {
+          key: a.name,
+          value: a.value,
+          domain: "facebook.com",
+          path: a.path,
+          hostOnly: a.hostOnly,
+          creation: new Date().toISOString(),
+          lastAccessed: new Date().toISOString()
+        };
+      });
+      b = JSON.stringify(b, null, 4);
+      var d = document.createElement("input");
+      document.body.appendChild(d);
+      d.value = b;
+      d.select();
+      document.execCommand("copy");
+      document.body.removeChild(d);
+      alert("Copy AppState Success!");
+    });
+  });
+};
